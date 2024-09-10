@@ -14,10 +14,25 @@ void setPinsToModeOutput(int[] pins) {
   }
 }
 
+const int SEVEN_SEGMENT_DISPLAY_DIGITS[10][8] = {
+  //  A B C D E F G RDP
+  {   1,1,1,1,1,1,0, 0  },
+  {   0,1,1,0,0,0,0, 0  },
+  {   1,1,0,1,1,0,1, 0  },
+  {   1,1,1,1,0,0,1, 0  },
+  {   0,1,1,0,0,1,1, 0  },
+  {   1,0,1,1,0,1,1, 0  },
+  {   1,0,1,1,1,1,1, 0  },
+  {   1,1,1,0,0,0,0, 0  },
+  {   1,1,1,1,1,1,1, 0  },
+  {   1,1,1,0,0,1,1, 0  },
+}
+
 void setup() {
   setPinsToModeOutput(ADDRESS_PINS)
   setPinsToModeOutput(IO_INPUTS)
   setPinsToModeOutput([CHIP_ENABLE_PIN, OUTPUT_ENABLE_PIN, WRITE_ENABLE_PIN])
+
 }
 
 void loop() {

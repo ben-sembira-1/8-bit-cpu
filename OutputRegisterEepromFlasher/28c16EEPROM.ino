@@ -55,11 +55,29 @@ bool setAddress(short address) {
   return true;
 }
 
+void setData(byte data) {
+  byte DATA_BITS_COUNT = 8;
+  for (byte data_bit_number = 0; data_bit_number < DATA_BITS_COUNT; data_bit_number++) {
+    bool bit_value = bitRead(data, data_bit_number);
+    int bit_pin = IO_PINS[data_bit_number];
+    digitalWrite(bit_pin, bit_value);
+  }
+}
+
 void disableAllControlPins() {
   disableChip();
   disableWrite();
   disableOutput();
   delayMicroseconds(CHIP_MAX_HOLD_TIME_MICROSECONDS);
+  setData(0);
+}
+
+void pulseWriteControlSignal() {
+  enableWrite();
+  enableChip();
+  const int MAX_WRITE_CYCLE_TIME_MICROSECONDS = 1;
+  delayMicroseconds(MAX_WRITE_CYCLE_TIME_MICROSECONDS);
+  disableAllControlPins();
 }
 
 bool writeToEEPROM(short address, byte data) {
@@ -67,16 +85,8 @@ bool writeToEEPROM(short address, byte data) {
   if (!setAddress(address)) {
     return false;
   }
-  
-  enableWrite();
-  enableChip();
-  const int MAX_WRITE_CYCLE_TIME_MICROSECONDS = 1;
-  delayMicroseconds(MAX_WRITE_CYCLE_TIME_MICROSECONDS);
-  
-  disableChip();
-  disableWrite();
-  delayMicroseconds(CHIP_MAX_HOLD_TIME_MICROSECONDS);
-  
+  setData(data);
+  pulseWriteControlSignal();
   return true;
 }
 

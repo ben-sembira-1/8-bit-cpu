@@ -1,6 +1,6 @@
 #include <AUnit.h>
 
-byte commonAnnodeSevenSegmentDisplayRepresentation(byte digit) {
+byte commonAnodeSevenSegmentDisplayRepresentation(byte digit) {
   const byte SEVEN_SEGMENT_DISPLAY_DIGITS[10] = {
     //ABCDEFG(RDP)
     0b11111100,
@@ -22,14 +22,14 @@ byte commonAnnodeSevenSegmentDisplayRepresentation(byte digit) {
 #define intArrayLength(arr) int(sizeof(arr) / sizeof(int))
 
 struct Base10Digits {
-  byte hunderds = 0;
+  byte hundreds = 0;
   byte tens = 0;
   byte units = 0;
 };
 
 struct Base10Digits getBase10Digits(int number) {
   Base10Digits digits;
-  digits.hunderds = ( number / 100) % 10;
+  digits.hundreds = ( number / 100) % 10;
   digits.tens     = ( number / 10)  % 10;
   digits.units    =   number        % 10;
   return digits;
@@ -37,9 +37,9 @@ struct Base10Digits getBase10Digits(int number) {
 
 void flashNumberDigits(byte number) {
     Base10Digits digits = getBase10Digits(number);
-    writeToEEPROM(number, commonAnnodeSevenSegmentDisplayRepresentation(digits.hunderds));
-    writeToEEPROM(number + pow(2, 8), commonAnnodeSevenSegmentDisplayRepresentation(digits.tens));
-    writeToEEPROM(number + pow(2, 9), commonAnnodeSevenSegmentDisplayRepresentation(digits.units));
+    writeToEEPROM(number, commonAnodeSevenSegmentDisplayRepresentation(digits.hundreds));
+    writeToEEPROM(number + pow(2, 8), commonAnodeSevenSegmentDisplayRepresentation(digits.tens));
+    writeToEEPROM(number + pow(2, 9), commonAnodeSevenSegmentDisplayRepresentation(digits.units));
 }
 
 void flashAll8BitNumbersDigits() {
@@ -52,7 +52,7 @@ void flashAll8BitNumbersDigits() {
 
 void setup() {
   Serial.begin(9600);
-  setupEEPROMInterfaceOutputPins();
+  setupPinModesForEEPROMWriting();
   flashAll8BitNumbersDigits();
   Serial.println("===============================");
   Serial.println("Finished flashing successfully!");

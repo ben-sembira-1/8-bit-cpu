@@ -11,9 +11,9 @@ const int CHIP_MAX_HOLD_TIME_MICROSECONDS = 1;
 
 #define intArrayLength(arr) int(sizeof(arr) / sizeof(int))
 
-void setPinsToModeOutput(int pins[]) {
+void pinArrayMode(int pins[], int mode) {
   for (int i = 0; i < intArrayLength(pins); i++) {
-    pinMode(pins[i], OUTPUT);
+    pinMode(pins[i], mode);
   }
 }
 
@@ -45,6 +45,7 @@ bool setAddress(short address) {
   const byte ADDRESS_BITS = 11;
   const short MAX_ADDRESS = pow(2, ADDRESS_BITS) - 1;
   if (address > MAX_ADDRESS) {
+    Serial.println("The address: " + String(address) + "is too big. The max address alowed is " + String(MAX_ADDRESS));
     return false;
   }
   for (byte address_bit_number = 0; address_bit_number < ADDRESS_BITS; address_bit_number++) {
@@ -62,6 +63,17 @@ void setData(byte data) {
     int bit_pin = IO_PINS[data_bit_number];
     digitalWrite(bit_pin, bit_value);
   }
+}
+
+byte getData() {
+  byte DATA_BITS_COUNT = 8;
+  byte dataToReturn
+  for (byte data_bit_number = 0; data_bit_number < DATA_BITS_COUNT; data_bit_number++) {
+    int bit_pin = IO_PINS[data_bit_number];
+    bool bit_value = digitalRead;
+    digitalWrite(bit_pin, bit_value);
+  }
+  return dataToReturn
 }
 
 void disableAllControlPins() {
@@ -90,9 +102,23 @@ bool writeToEEPROM(short address, byte data) {
   return true;
 }
 
-void setupEEPROMInterfaceOutputPins() {
-  setPinsToModeOutput(ADDRESS_PINS);
-  setPinsToModeOutput(IO_PINS);
+byte readFromEEPROM(short address) {
+  disableAllControlPins()
+  if (!setAddress(address)) {
+    return 0;
+  }
+}
+
+void setupPinModesForEEPROMWriting() {
+  pinArrayMode(ADDRESS_PINS, OUTPUT);
+  pinArrayMode(IO_PINS, OUTPUT);
   const int ENABLE_PINS[3] = {CHIP_ENABLE_PIN, OUTPUT_ENABLE_PIN, WRITE_ENABLE_PIN};
-  setPinsToModeOutput(ENABLE_PINS);
+  pinArrayMode(ENABLE_PINS, OUTPUT);
+}
+
+void setupPinModesForEEPROMReading() {
+  pinArrayMode(ADDRESS_PINS, OUTPUT);
+  pinArrayMode(IO_PINS, INPUT);
+  const int ENABLE_PINS[3] = {CHIP_ENABLE_PIN, OUTPUT_ENABLE_PIN, WRITE_ENABLE_PIN};
+  pinArrayMode(ENABLE_PINS, OUTPUT);
 }

@@ -50,10 +50,28 @@ void flashAll8BitNumbersDigits() {
   }
 }
 
+
+void debugFlashOneNumberAndWait(byte data) {
+  if (writeToEEPROM(2047, data)) {
+    Serial.println("Successfully wrote " + String(data) + " to address 1111111111");
+  } else {
+    Serial.println("Error in writing a single value");
+  }
+  enableChip();
+  enableOutput();
+  int SECOND_IN_MILLIS = 1000; 
+  delay(SECOND_IN_MILLIS * 20);
+  disableChip();
+  disableOutput();
+}
+
 void setup() {
   Serial.begin(9600);
   setupPinModesForEEPROMWriting();
-  flashAll8BitNumbersDigits();
+
+  debugFlashOneNumberAndWait(0b01010101);
+  // flashAll8BitNumbersDigits();
+
   Serial.println("===============================");
   Serial.println("Finished flashing successfully!");
   Serial.println("===============================");

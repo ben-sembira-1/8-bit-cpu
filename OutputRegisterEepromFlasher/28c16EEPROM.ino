@@ -73,6 +73,18 @@ void setData(byte data) {
   }
 }
 
+byte readData() {
+  byte DATA_BITS_COUNT = 8;
+  byte data = 0;
+  for (byte bit_number = 0; bit_number < DATA_BITS_COUNT; bit_number++) {
+    bool bit_value = bitRead(data, bit_number);
+    int bit_pin = IO_PINS[bit_number];
+    data &= digitalRead(bit_pin);
+    data = data << 1;
+    Serial.println("Reading data[" + String(bit_number) + "/8]: " + String(data));
+  }
+}
+
 void disableAllControlPins() {
   disableChip();
   disableWrite();
@@ -97,6 +109,25 @@ bool writeToEEPROM(short address, byte data) {
   setData(data);
   pulseWriteControlSignal();
   return true;
+}
+
+struct EEPROMReading readFromEEPROM(short address) {
+  EEPROMReading result;
+  result.data = 0;
+  result.success = false;
+
+  disableAllControlPins();
+  enableChip();
+  enableOutput();
+  if (!setAddress(address)) {
+    return result;
+  }
+  const int CHIP_OUTPUT_PROPEGATION_DELAY_MILLISECONDS = 1;
+  delay(CHIP_OUTPUT_PROPEGATION_DELAY_MILLISECONDS);
+  result.data = readData();
+  result.success = true;
+  disableAllControlPins();
+  return result;
 }
 
 void setupPinModesForEEPROMWriting() {

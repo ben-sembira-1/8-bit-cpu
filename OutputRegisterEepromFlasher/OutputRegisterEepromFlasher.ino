@@ -27,6 +27,11 @@ struct Base10Digits {
   byte units = 0;
 };
 
+struct EEPROMReading {
+  byte data;
+  bool success;
+};
+
 struct Base10Digits getBase10Digits(int number) {
   Base10Digits digits;
   digits.hundreds = ( number / 100) % 10;
@@ -51,25 +56,24 @@ void flashAll8BitNumbersDigits() {
 }
 
 
-void debugFlashOneNumberAndWait(byte data) {
-  if (writeToEEPROM(2047, data)) {
+void debugFlashOneNumberAndWait(short address, byte data) {
+  if (writeToEEPROM(address, data)) {
     Serial.println("Successfully wrote " + String(data) + " to address 1111111111");
   } else {
     Serial.println("Error in writing a single value");
   }
-  enableChip();
-  enableOutput();
-  int SECOND_IN_MILLIS = 1000; 
-  delay(SECOND_IN_MILLIS * 20);
-  disableChip();
-  disableOutput();
 }
 
 void setup() {
   Serial.begin(9600);
-  setupPinModesForEEPROMWriting();
 
-  debugFlashOneNumberAndWait(0b01010101);
+  setupPinModesForEEPROMWriting();
+  debugFlashOneNumberAndWait(2047, 0b01010101);
+
+  setupPinModesForEEPROMReading();
+  EEPROMReading reading = readFromEEPROM(2047);
+  Serial.println("Data read from the EEPROM: " + String(reading.success) + " - " + String(reading.data));
+
   // flashAll8BitNumbersDigits();
 
   Serial.println("===============================");

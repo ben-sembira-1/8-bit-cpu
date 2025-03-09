@@ -56,31 +56,39 @@ void flashAll8BitNumbersDigits() {
 }
 
 
-void debugFlashOneNumberAndWait(short address, byte data) {
+void debugFlashOneNumber(short address, byte data) {
   if (writeToEEPROM(address, data)) {
-    Serial.println("Successfully wrote " + String(data) + " to address 1111111111");
+    Serial.println("Successfully wrote " + String(data) + " to address " + String(address));
   } else {
     Serial.println("Error in writing a single value");
   }
 }
 
+void testRoutine(short address, byte value) {
+  Serial.println("======== Get ready (write) =========");
+  delay(3000);
+
+  setupPinModesForEEPROMWriting();
+  debugFlashOneNumber(address, value);  //TODO: FIND OUT IS THE ADDRESS FLIPPED IN THE PROCESS?
+
+  Serial.println("======== Get ready (read) =========");
+  delay(1000);
+
+  setupPinModesForEEPROMReading();
+  EEPROMReading reading = readFromEEPROM(address);
+  Serial.println("Data read from the EEPROM: " + String(reading.success) + " - " + String(reading.data) + ", original: " + String(value));
+}
+
 void setup() {
   Serial.begin(9600);
 
-  setupPinModesForEEPROMWriting();
-  debugFlashOneNumberAndWait(2047, 0b01010101);
-
-  setupPinModesForEEPROMReading();
-  EEPROMReading reading = readFromEEPROM(2047);
-  Serial.println("Data read from the EEPROM: " + String(reading.success) + " - " + String(reading.data));
-
+  // testRoutine(2000, 0b01010101);
+  // delay(1000);
+  testRoutine(2000, 0b10101010);
+  // delay(1000);
   // flashAll8BitNumbersDigits();
-
-  Serial.println("===============================");
-  Serial.println("Finished flashing successfully!");
-  Serial.println("===============================");
 }
 
 void loop() {
-  aunit::TestRunner::run();
+  // aunit::TestRunner::run();
 }

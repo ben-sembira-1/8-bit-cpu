@@ -3,12 +3,12 @@
 
 #define DEBUG false
 
-const int ADDRESS_PINS[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+const int ADDRESS_PINS[] = {22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42};
 // const int IO_PINS[] = {A0, A1, A2, A3, A4, A5, A6, A7};
 const int IO_PINS[] = {39, 41, 43, 45, 47, 49, 51, 53};
-const int WRITE_ENABLE_PIN = 11;
-const int OUTPUT_ENABLE_PIN = 12;
-const int CHIP_ENABLE_PIN = 13;
+const int WRITE_ENABLE_PIN = 48;
+const int OUTPUT_ENABLE_PIN = 50;
+const int CHIP_ENABLE_PIN = 52;
 
 const int HW_BREAKPOINT_PIN = 31;
 
@@ -142,7 +142,6 @@ bool writeToEEPROM(short address, byte data) {
     return false;
   }
   setData(data);
-  hardwareBreakpoint();
   pulseWriteControlSignal();
   return true;
 }
@@ -157,25 +156,27 @@ struct EEPROMReading readFromEEPROM(short address) {
   delay(3000);
 
   enableOutput();
-  hardwareBreakpoint();
   if (!setAddress(address)) {
     return result;
   }
   enableChip();
-  hardwareBreakpoint();
   const int CHIP_OUTPUT_PROPEGATION_DELAY_MILLISECONDS = 40;
   delay(CHIP_OUTPUT_PROPEGATION_DELAY_MILLISECONDS);
-  hardwareBreakpoint();
   result.data = readData();
   result.success = true;
-  hardwareBreakpoint();
   delay(1);
   disableAllControlPins();
-  hardwareBreakpoint();
   return result;
 }
 
+void generalSetup() {
+  disableChip();
+  disableOutput();
+  disableWrite();
+}
+
 void setupPinModesForEEPROMWriting() {
+  generalSetup();
   pinArrayMode(ADDRESS_PINS, intArrayLength(ADDRESS_PINS), OUTPUT);
   pinArrayMode(IO_PINS, intArrayLength(IO_PINS), OUTPUT);
   const int ENABLE_PINS[3] = {CHIP_ENABLE_PIN, OUTPUT_ENABLE_PIN, WRITE_ENABLE_PIN};
@@ -184,6 +185,7 @@ void setupPinModesForEEPROMWriting() {
 }
 
 void setupPinModesForEEPROMReading() {
+  generalSetup();
   pinArrayMode(ADDRESS_PINS, intArrayLength(ADDRESS_PINS), OUTPUT);
   pinArrayMode(IO_PINS, intArrayLength(IO_PINS), INPUT);
   const int ENABLE_PINS[3] = {CHIP_ENABLE_PIN, OUTPUT_ENABLE_PIN, WRITE_ENABLE_PIN};

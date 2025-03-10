@@ -82,8 +82,8 @@ void testRoutine(short address, byte value) {
 void setup() {
   Serial.begin(9600);
 
-  // testRoutine(2000, 0b01010101);
-  // delay(1000);
+  testRoutine(2000, 0b01010101);
+  delay(1000);
   testRoutine(2000, 0b10101010);
   // delay(1000);
   // flashAll8BitNumbersDigits();

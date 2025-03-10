@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include <AUnit.h>
 
+#define VERBOSE false
 #define DEBUG false
 
 const int ADDRESS_PINS[] = {22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42};
@@ -81,7 +82,9 @@ bool setAddress(short address) {
     Serial.println("The address: " + String(address) + "is too big. The max address alowed is " + String(MAX_ADDRESS));
     return false;
   }
-  Serial.println(">>> Setting address: " + String(address) + " <<<");
+  if (VERBOSE) {
+    Serial.println(">>> Setting address: " + String(address) + " <<<");
+  }
   for (byte address_bit_number = 0; address_bit_number < ADDRESS_BITS; address_bit_number++) {
     bool bit_value = bitRead(address, address_bit_number);
     int bit_pin = ADDRESS_PINS[address_bit_number];
@@ -105,7 +108,9 @@ void setDataLogging(byte data, bool shouldLog) {
 }
 
 void setData(byte data) {
-  Serial.println(">>> Setting data: " + String(data) + " <<<");
+  if (VERBOSE) {
+    Serial.println(">>> Setting data: " + String(data) + " <<<");
+  }
   setDataLogging(data, true);
 }
 
@@ -152,19 +157,16 @@ struct EEPROMReading readFromEEPROM(short address) {
   result.success = false;
 
   disableAllControlPins();
-  Serial.println("======== Get ready (after disable) =========");
-  delay(3000);
 
   enableOutput();
   if (!setAddress(address)) {
     return result;
   }
   enableChip();
-  const int CHIP_OUTPUT_PROPEGATION_DELAY_MILLISECONDS = 40;
+  const int CHIP_OUTPUT_PROPEGATION_DELAY_MILLISECONDS = 1;
   delay(CHIP_OUTPUT_PROPEGATION_DELAY_MILLISECONDS);
   result.data = readData();
   result.success = true;
-  delay(1);
   disableAllControlPins();
   return result;
 }

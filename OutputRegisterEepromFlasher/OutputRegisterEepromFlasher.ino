@@ -1,5 +1,7 @@
 #include <AUnit.h>
 
+#define MAX_BYTE (256)
+
 byte commonAnodeSevenSegmentDisplayRepresentation(byte digit) {
   const byte SEVEN_SEGMENT_DISPLAY_DIGITS[10] = {
     //ABCDEFG(RDP)
@@ -48,47 +50,18 @@ void flashNumberDigits(byte number) {
 }
 
 void flashAll8BitNumbersDigits() {
-  const int MAX_BYTE = pow(2, 8);
   for (int number = 0; number < MAX_BYTE; number++) {
     flashNumberDigits(number);
-    Serial.println("Flashed " + String(number + 1) + "/" + String(MAX_BYTE) + " numbers.");
+    Serial.println("Flashed: " + String(number) + "/" + String(MAX_BYTE - 1));
   }
-}
-
-
-void debugFlashOneNumber(short address, byte data) {
-  if (writeToEEPROM(address, data)) {
-    Serial.println("Successfully wrote " + String(data) + " to address " + String(address));
-  } else {
-    Serial.println("Error in writing a single value");
-  }
-}
-
-void testRoutine(short address, byte value) {
-  Serial.println("======== Get ready (write) =========");
-  delay(3000);
-
-  setupPinModesForEEPROMWriting();
-  debugFlashOneNumber(address, value);  //TODO: FIND OUT IS THE ADDRESS FLIPPED IN THE PROCESS?
-
-  Serial.println("======== Get ready (read) =========");
-  delay(1000);
-
-  setupPinModesForEEPROMReading();
-  EEPROMReading reading = readFromEEPROM(address);
-  Serial.println("Data read from the EEPROM: " + String(reading.success) + " - " + String(reading.data) + ", original: " + String(value));
 }
 
 void setup() {
   Serial.begin(9600);
-
-  testRoutine(2000, 0b01010101);
-  delay(1000);
-  testRoutine(2000, 0b10101010);
-  // delay(1000);
-  // flashAll8BitNumbersDigits();
+  setupPinModesForEEPROMWriting();
+  flashAll8BitNumbersDigits();
 }
 
 void loop() {
-  // aunit::TestRunner::run();
+  aunit::TestRunner::run();
 }

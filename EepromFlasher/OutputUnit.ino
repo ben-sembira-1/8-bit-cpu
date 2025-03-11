@@ -1,7 +1,3 @@
-#include <AUnit.h>
-
-#define MAX_BYTE (256)
-
 byte commonAnodeSevenSegmentDisplayRepresentation(byte digit)
 {
   const byte SEVEN_SEGMENT_DISPLAY_DIGITS[10] = {
@@ -21,8 +17,6 @@ byte commonAnodeSevenSegmentDisplayRepresentation(byte digit)
   byte invertedRepresentation = SEVEN_SEGMENT_DISPLAY_DIGITS[digit] ^ 0b11111111;
   return invertedRepresentation;
 }
-
-#define intArrayLength(arr) int(sizeof(arr) / sizeof(int))
 
 struct Base10Digits
 {

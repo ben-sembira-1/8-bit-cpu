@@ -40,6 +40,7 @@ void flashNumberDigits(byte number)
 void flashAll8BitNumbersDigits()
 {
   const int LOG_INTERVAL = 50;
+  setupPinModesForEEPROMWriting();
   for (int number = 0; number < MAX_BYTE; number++)
   {
     flashNumberDigits(number);
@@ -70,7 +71,6 @@ bool validateSingleNumber(short number)
 
 void validateOutputEeprom()
 {
-  Serial.println(">>> Validating Output Unit <<<");
   setupPinModesForEEPROMReading();
   const int LOG_INTERVAL = 50;
   for (short number = 0; number < 256; number++)

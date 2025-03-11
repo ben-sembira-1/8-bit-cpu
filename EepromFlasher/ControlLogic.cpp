@@ -4,8 +4,8 @@ byte buildControlSignal(LoadControl load, OutputControl out, HaltControl halt, P
 {
 	return (static_cast<byte>(load)) |
 		   (static_cast<byte>(out) << 3) |
-		   (static_cast<byte>(halt) << 6) |
-		   (static_cast<byte>(pc) << 7);
+		   (static_cast<byte>(pc) << 6) |
+		   (static_cast<byte>(halt) << 7);
 }
 
 namespace Commands
@@ -65,28 +65,68 @@ namespace Commands
 	};
 }
 
-// void flashCommand(byte opcode, byte *signals, int length)
-// {
-// 	if (length > MAX_AUXILARY_COMMAND_LENGTH)
-// 	{
-// 		redPrintln("Failed to flash command because length is too big.");
-// 		return;
-// 	}
-
-// 	// TODO: flash all signals
-// }
-
-void flashFetch()
+void flashCommand(byte opcode, const byte *signals, int length, int offset)
 {
-	
+	for (int i = 0; i < length; i++)
+	{
+		writeToEEPROM(((i + offset) << OPCODE_LENGTH_BITS) + opcode, signals[i]);
+	}
 }
 
 void flashAllControlSignals()
 {
-	redPrintln("NOT IMPLEMENTED");
+	setupPinModesForEEPROMWriting();
+
+	flashCommand(0, Commands::FETCH, MAX_FETCH_COMMAND_LENGTH, 0);
+	const int opcodesCount = int(sizeof(Commands::ALL_COMMANDS) / sizeof(byte *));
+	for (int opcode = 0; opcode < opcodesCount; opcode++)
+	{
+		flashCommand(opcode, Commands::ALL_COMMANDS[opcode], MAX_AUXILARY_COMMAND_LENGTH, MAX_FETCH_COMMAND_LENGTH);
+		Serial.println("Flashed opcode: " + String(opcode));
+	}
+}
+
+bool fetchFlashedCorrectly()
+{
+	Serial.println("* Validating FETCH");
+	return readFromEEPROM(0x00).data == 0b00011010 &&
+		   readFromEEPROM(0x10).data == 0b01010001;
+}
+
+bool outputAFlashedCorrectly()
+{
+	Serial.println("* Validating OUTPUT_A");
+	return readFromEEPROM(0x20).data == 0b00111111 &&
+		   readFromEEPROM(0x30).data == 0b00000000;
+}
+
+bool ramStoreBFlashedCorrectly()
+{
+	Serial.println("* Validating RAM_STORE_B");
+	return readFromEEPROM(0x25).data == 0b00001010 &&
+		   readFromEEPROM(0x35).data == 0b00100011 &&
+		   readFromEEPROM(0x45).data == 0b00000000;
+}
+
+bool haltFlashedCorrectly()
+{
+	Serial.println("* Validating HALT");
+	return readFromEEPROM(0x29).data == 0b10000000 &&
+		   readFromEEPROM(0x39).data == 0b00000000;
 }
 
 void validateControlLogicEeprom()
 {
-	redPrintln("NOT IMPLEMENTED");
+	setupPinModesForEEPROMReading();
+	if (!(fetchFlashedCorrectly() &&
+		  outputAFlashedCorrectly() &&
+		  ramStoreBFlashedCorrectly() &&
+		  haltFlashedCorrectly()))
+	{
+		redPrintln("Error: signal did not flash correctly.");
+		Serial.println();
+		return;
+	}
+	greenPrintln("A sample of signals has been validated successfully.");
+	Serial.println("(Keep in mind that not all signals were verified)\n");
 }

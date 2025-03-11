@@ -1,8 +1,9 @@
 #ifndef CONTROL_LOGIC_H
 #define CONTROL_LOGIC_H
 
-#include "utils.h"
+#include "28c16EEPROM.h"
 
+#define OPCODE_LENGTH_BITS (4)
 #define MAX_AUXILARY_COMMAND_LENGTH (8)
 #define MAX_FETCH_COMMAND_LENGTH (2)
 #define MAX_TOTAL_COMMANDS (16)
@@ -42,5 +43,8 @@ enum class PCControl
 	NOP = 0,
 	INCREMENT = 1,
 };
+
+void flashAllControlSignals();
+void validateControlLogicEeprom();
 
 #endif

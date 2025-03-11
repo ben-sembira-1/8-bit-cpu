@@ -15,7 +15,7 @@ enum class Program
 
 // -------------------------
 // For choosing the program:
-const Program PROGRAM = Program::OUTPUT_UNIT;
+const Program PROGRAM = Program::CONTROL_LOGIC;
 // -------------------------
 
 
@@ -28,14 +28,16 @@ void setup()
   {
   case Program::OUTPUT_UNIT:
     Serial.println(">>> Flashing Output Unit <<<\n");
-    setupPinModesForEEPROMWriting();
     flashAll8BitNumbersDigits();
+    Serial.println("\n>>> Validating Output Unit <<<\n");
     validateOutputEeprom();
     break;
-
-  case Program::CONTROL_LOGIC:
+    
+    case Program::CONTROL_LOGIC:
     Serial.println(">>> Flashing Control Logic <<<\n");
-    redPrintln("NOT IMPLEMENTED");
+    flashAllControlSignals();
+    Serial.println("\n>>> Validating Control Logic <<<\n");
+    validateControlLogicEeprom();
     break;
 
   default:

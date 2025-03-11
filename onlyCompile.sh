@@ -2,7 +2,9 @@
 
 set -euo pipefail
 
-arduino-cli compile -b arduino:avr:mega EepromFlasher/EepromFlasher.ino --warnings all 2>&1 | while IFS= read -r line; do
+
+BOARD_NAME="-b arduino:avr:mega"
+arduino-cli compile $BOARD_NAME EepromFlasher/EepromFlasher.ino --warnings all 2>&1 | while IFS= read -r line; do
 	if echo "$line" | grep -qi "error:"; then
     	echo -e "\e[31m$line\e[0m"
 	elif echo "$line" | grep -qi "warning:"; then

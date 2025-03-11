@@ -1,15 +1,11 @@
 #include <AUnit.h>
 #include "utils.h"
 #include "ControlLogic.h"
-
-#define VERBOSE (false)
-#define DEBUG (false)
-#define TEST (false)
+#include "28c16EEPROM.h"
 
 #define OPTION_OUTPUT_EEPROM (0)
 #define OPTION_CONTROL_EEPROM (1)
 
-#define MAX_BYTE (256)
 enum class Program
 {
   OUTPUT_UNIT,
@@ -21,15 +17,10 @@ enum class Program
 const Program PROGRAM = Program::OUTPUT_UNIT;
 // -------------------------
 
-struct EEPROMReading
-{
-  byte data;
-  bool success;
-};
-
 
 void setup()
 {
+  setupHWBreakpoint();
   Serial.begin(9600);
   Serial.println("\n\n=== EEPROM FLASHER ===");
   switch (PROGRAM)

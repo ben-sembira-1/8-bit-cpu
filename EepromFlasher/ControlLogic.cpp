@@ -62,22 +62,23 @@ namespace Commands
 		SUBTRACT,
 		JUMP,
 		HALT,
-	}
+	};
 }
 
-void flashCommand(byte opcode, byte *signals, int length)
-{
-	if (length > MAX_AUXILARY_COMMAND_LENGTH)
-	{
-		redPrintln("Failed to flash command because length is too big.");
-		return;
-	}
+// void flashCommand(byte opcode, byte *signals, int length)
+// {
+// 	if (length > MAX_AUXILARY_COMMAND_LENGTH)
+// 	{
+// 		redPrintln("Failed to flash command because length is too big.");
+// 		return;
+// 	}
 
-	// TODO: flash all signals
-	for ()
-	{
-		redPrintln("Delete me " + signals[i]);
-	}
+// 	// TODO: flash all signals
+// }
+
+void flashFetch()
+{
+	
 }
 
 void flashAllControlSignals()

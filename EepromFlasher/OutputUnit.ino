@@ -84,6 +84,7 @@ void validateOutputEeprom()
     if (!validateSingleNumber(number))
     {
       redPrintln("Error: The number " + String(number) + " did not flash correctly.");
+      Serial.println();
       return;
     }
 

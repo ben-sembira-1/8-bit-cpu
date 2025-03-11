@@ -1,4 +1,6 @@
 #include <AUnit.h>
+#include "utils.h"
+#include "ControlLogic.h"
 
 #define VERBOSE (false)
 #define DEBUG (false)
@@ -25,15 +27,6 @@ struct EEPROMReading
   bool success;
 };
 
-void redPrintln(String s)
-{
-  Serial.println("\033[31m" + s + "\033[0m");
-}
-
-void greenPrintln(String s)
-{
-  Serial.println("\033[32m" + s + "\033[0m");
-}
 
 void setup()
 {

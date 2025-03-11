@@ -20,7 +20,7 @@ void hardwareBreakpoint() {
   digitalWrite(HW_BREAKPOINT_PIN, HIGH);
 }
 
-void pinModeAndLog(uint8_t pin, uint8_t mode){
+void pinModeAndLog(const uint8_t pin, const uint8_t mode){
     pinMode(pin, mode);
     if (DEBUG) {
       Serial.println("pin mode: " + String(pin) + " -> " + String(mode));
@@ -42,7 +42,7 @@ int digitalReadAndLog(uint8_t pin){
     return value;
 }
 
-void pinArrayMode(int pins[], int pinsLength, int mode) {
+void pinArrayMode(const int pins[], int pinsLength, int mode) {
   for (int i = 0; i < pinsLength; i++) {
     pinModeAndLog(pins[i], mode);
   }
@@ -115,7 +115,7 @@ byte readData() {
   byte DATA_BITS_COUNT = 8;
   byte data = 0;
   for (byte bit_number = 0; bit_number < DATA_BITS_COUNT; bit_number++) {
-    bool bit_value = bitRead(data, bit_number);
+    bitRead(data, bit_number);
     int bit_pin = IO_PINS[bit_number];
     bitWrite(data, bit_number, digitalReadAndLog(bit_pin));
   }

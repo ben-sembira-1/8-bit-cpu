@@ -1,7 +1,8 @@
 #include <AUnit.h>
 #include "utils.h"
-#include "ControlLogic.h"
 #include "28c16EEPROM.h"
+#include "OutputUnit.h"
+#include "ControlLogic.h"
 
 #define OPTION_OUTPUT_EEPROM (0)
 #define OPTION_CONTROL_EEPROM (1)

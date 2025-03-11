@@ -1,3 +1,5 @@
+#include "OutputUnit.h"
+
 byte commonAnodeSevenSegmentDisplayRepresentation(byte digit)
 {
   const byte SEVEN_SEGMENT_DISPLAY_DIGITS[10] = {
@@ -17,14 +19,6 @@ byte commonAnodeSevenSegmentDisplayRepresentation(byte digit)
   byte invertedRepresentation = SEVEN_SEGMENT_DISPLAY_DIGITS[digit] ^ 0b11111111;
   return invertedRepresentation;
 }
-
-struct Base10Digits
-{
-  byte hundreds = 0;
-  byte tens = 0;
-  byte units = 0;
-};
-
 
 struct Base10Digits getBase10Digits(int number)
 {

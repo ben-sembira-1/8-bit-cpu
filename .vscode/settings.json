@@ -3,5 +3,9 @@
 		"baudrate",
 		"EEPROM"
 	],
-	"C_Cpp.errorSquiggles": "disabled"
+	"C_Cpp.errorSquiggles": "disabled",
+	"files.associations": {
+		"cstddef": "cpp",
+		"limits": "cpp"
+	}
 }

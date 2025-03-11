@@ -63,16 +63,6 @@ void flashAll8BitNumbersDigits()
   Serial.println("Successfully flashed " + String(MAX_BYTE) + " numbers.\n");
 }
 
-void redPrintln(String s)
-{
-  Serial.println("\033[31m" + s + "\033[0m");
-}
-
-void greenPrintln(String s)
-{
-  Serial.println("\033[32m" + s + "\033[0m");
-}
-
 bool validateSingleNumber(short number)
 {
   EEPROMReading readingHundreds = readFromEEPROM(number);

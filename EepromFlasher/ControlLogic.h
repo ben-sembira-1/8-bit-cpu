@@ -3,16 +3,20 @@
 
 #include "utils.h"
 
+#define MAX_AUXILARY_COMMAND_LENGTH (8)
+#define MAX_FETCH_COMMAND_LENGTH (2)
+#define MAX_TOTAL_COMMANDS (16)
+
 enum class LoadControl
 {
 	NOP = 0,
-	INSTRUCTION_REGISTER = 1,
+	INSTRUCTION = 1,
 	RAM_ADDRESS = 2,
 	RAM_DATA = 3,
 	PROGRAM_COUNTER = 4,
 	REGISTER_B = 5,
 	REGISTER_A = 6,
-	DISPLAY_REGISTER = 7,
+	OUT_DISPLAY = 7,
 };
 
 enum class OutputControl

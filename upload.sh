@@ -1,6 +1,6 @@
 #!/bin/bash
 
-arduino-cli upload -p /dev/ttyACM0 -b arduino:avr:mega OutputRegisterEepromFlasher/OutputRegisterEepromFlasher.ino -v -t
+arduino-cli upload -p /dev/ttyACM0 -b arduino:avr:mega EepromFlasher/EepromFlasher.ino -v -t
 echo -e "\n----\n"
 arduino-cli monitor -p /dev/ttyACM0 -c baudrate=9600 | while IFS= read -r line; do
 	formatted="$(date +'%H:%M:%S.%3N')\t$line"

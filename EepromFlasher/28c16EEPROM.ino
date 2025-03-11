@@ -1,9 +1,6 @@
 #include <Arduino.h>
 #include <AUnit.h>
 
-#define VERBOSE false
-#define DEBUG false
-
 const int ADDRESS_PINS[] = {22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42};
 // const int IO_PINS[] = {A0, A1, A2, A3, A4, A5, A6, A7};
 const int IO_PINS[] = {39, 41, 43, 45, 47, 49, 51, 53};

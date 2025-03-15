@@ -1,13 +1,13 @@
 #include <AUnit.h>
-
-#define VERBOSE (false)
-#define DEBUG (false)
-#define TEST (false)
+#include "utils.h"
+#include "28c16EEPROM.h"
+#include "OutputUnit.h"
+#include "ControlLogic.h"
 
 #define OPTION_OUTPUT_EEPROM (0)
 #define OPTION_CONTROL_EEPROM (1)
 
-enum Program
+enum class Program
 {
   OUTPUT_UNIT,
   CONTROL_LOGIC,
@@ -15,41 +15,29 @@ enum Program
 
 // -------------------------
 // For choosing the program:
-const Program PROGRAM = OUTPUT_UNIT;
+const Program PROGRAM = Program::CONTROL_LOGIC;
 // -------------------------
 
-struct EEPROMReading
-{
-  byte data;
-  bool success;
-};
-
-void redPrintln(String s)
-{
-  Serial.println("\033[31m" + s + "\033[0m");
-}
-
-void greenPrintln(String s)
-{
-  Serial.println("\033[32m" + s + "\033[0m");
-}
 
 void setup()
 {
+  setupHWBreakpoint();
   Serial.begin(9600);
   Serial.println("\n\n=== EEPROM FLASHER ===");
   switch (PROGRAM)
   {
-  case OUTPUT_UNIT:
+  case Program::OUTPUT_UNIT:
     Serial.println(">>> Flashing Output Unit <<<\n");
-    setupPinModesForEEPROMWriting();
     flashAll8BitNumbersDigits();
+    Serial.println("\n>>> Validating Output Unit <<<\n");
     validateOutputEeprom();
     break;
-
-  case CONTROL_LOGIC:
+    
+    case Program::CONTROL_LOGIC:
     Serial.println(">>> Flashing Control Logic <<<\n");
-    redPrintln("NOT IMPLEMENTED");
+    flashAllControlSignals();
+    Serial.println("\n>>> Validating Control Logic <<<\n");
+    validateControlLogicEeprom();
     break;
 
   default:

@@ -1,6 +1,4 @@
-#include <AUnit.h>
-
-#define MAX_BYTE (256)
+#include "OutputUnit.h"
 
 byte commonAnodeSevenSegmentDisplayRepresentation(byte digit)
 {
@@ -22,16 +20,6 @@ byte commonAnodeSevenSegmentDisplayRepresentation(byte digit)
   return invertedRepresentation;
 }
 
-#define intArrayLength(arr) int(sizeof(arr) / sizeof(int))
-
-struct Base10Digits
-{
-  byte hundreds = 0;
-  byte tens = 0;
-  byte units = 0;
-};
-
-
 struct Base10Digits getBase10Digits(int number)
 {
   Base10Digits digits;
@@ -52,6 +40,7 @@ void flashNumberDigits(byte number)
 void flashAll8BitNumbersDigits()
 {
   const int LOG_INTERVAL = 50;
+  setupPinModesForEEPROMWriting();
   for (int number = 0; number < MAX_BYTE; number++)
   {
     flashNumberDigits(number);
@@ -82,7 +71,6 @@ bool validateSingleNumber(short number)
 
 void validateOutputEeprom()
 {
-  Serial.println(">>> Validating Output Unit <<<");
   setupPinModesForEEPROMReading();
   const int LOG_INTERVAL = 50;
   for (short number = 0; number < 256; number++)
@@ -90,6 +78,7 @@ void validateOutputEeprom()
     if (!validateSingleNumber(number))
     {
       redPrintln("Error: The number " + String(number) + " did not flash correctly.");
+      Serial.println();
       return;
     }
 

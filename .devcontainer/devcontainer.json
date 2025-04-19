@@ -6,10 +6,7 @@
   "image": "mcr.microsoft.com/devcontainers/base:noble",
   "features": {
     "ghcr.io/devcontainers/features/git:1": {},
-    "ghcr.io/devcontainers/features/github-cli:1": {},
-    "ghcr.io/devcontainers-contrib/features/homebrew-package:1": {
-      "package": "arduino-cli"
-    }
+    "ghcr.io/devcontainers/features/github-cli:1": {}
   },
   "mounts": [
     "source=/dev,target=/dev,type=bind,bind-propagation=rslave"
